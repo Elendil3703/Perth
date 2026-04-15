@@ -115,7 +115,7 @@
 
   /* Map Section */
   .map-section {
-    padding: 0;
+    padding: 2rem 0;
     position: relative;
   }
 
@@ -123,21 +123,14 @@
     font-family: 'Playfair Display', serif;
     font-size: 2rem;
     text-align: center;
-    padding: 3rem 0 1.5rem;
+    padding: 1rem 0 1rem;
     color: var(--ocean-deep);
   }
 
-  .map-container {
-    width: 100%;
-    height: 500px;
-    border-top: 3px solid var(--ocean);
-    border-bottom: 3px solid var(--ocean);
-  }
-
-  .map-container iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
+  .sketch-map {
+    max-width: 520px;
+    margin: 0 auto;
+    display: block;
   }
 
   /* Timeline */
@@ -430,204 +423,123 @@
 
 <!-- Map -->
 <section class="map-section">
-  <h2>全程路线</h2>
-  <!-- Legend -->
-  <div id="map-legend" style="display:flex;justify-content:center;gap:1.2rem;flex-wrap:wrap;padding:0 1rem 1rem;font-size:0.85rem;font-weight:600;">
-    <span style="display:flex;align-items:center;gap:0.4rem;"><span style="width:28px;height:4px;border-radius:2px;background:#1B6B93;display:inline-block;"></span> Day 1 沿海北上</span>
-    <span style="display:flex;align-items:center;gap:0.4rem;"><span style="width:28px;height:4px;border-radius:2px;background:#E8A0BF;display:inline-block;"></span> Day 2 粉红湖</span>
-    <span style="display:flex;align-items:center;gap:0.4rem;"><span style="width:28px;height:4px;border-radius:2px;background:#E8734A;display:inline-block;"></span> Day 3 卡尔巴里</span>
-    <span style="display:flex;align-items:center;gap:0.4rem;"><span style="width:28px;height:4px;border-radius:2px;background:#6C63FF;display:inline-block;"></span> Day 4 跳伞日</span>
-    <span style="display:flex;align-items:center;gap:0.4rem;"><span style="width:28px;height:4px;border-radius:2px;background:#8B7E74;display:inline-block;"></span> Day 5 珀斯</span>
+  <h2>全程路线草图</h2>
+  <div style="display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;padding:0 1rem 0.8rem;font-size:0.82rem;font-weight:600;">
+    <span style="display:flex;align-items:center;gap:0.3rem;"><span style="width:22px;height:3px;border-radius:2px;background:#1B6B93;display:inline-block;"></span> D1</span>
+    <span style="display:flex;align-items:center;gap:0.3rem;"><span style="width:22px;height:3px;border-radius:2px;background:#E8A0BF;display:inline-block;"></span> D2</span>
+    <span style="display:flex;align-items:center;gap:0.3rem;"><span style="width:22px;height:3px;border-radius:2px;background:#E8734A;display:inline-block;"></span> D3</span>
+    <span style="display:flex;align-items:center;gap:0.3rem;"><span style="width:22px;height:3px;border-radius:2px;background:#6C63FF;display:inline-block;"></span> D4</span>
+    <span style="display:flex;align-items:center;gap:0.3rem;"><span style="width:22px;height:3px;border-radius:2px;background:#8B7E74;display:inline-block;"></span> D5</span>
   </div>
-  <div class="map-container" id="leaflet-map"></div>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-  <script>
-  (function(){
-    var map = L.map('leaflet-map', {scrollWheelZoom: false}).setView([-29.5, 115.3], 7);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors',
-      maxZoom: 18
-    }).addTo(map);
+  <svg class="sketch-map" viewBox="0 0 420 620" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans SC','DM Sans',sans-serif;">
+    <!-- Ocean background -->
+    <rect width="420" height="620" fill="#e8f4f8" rx="12"/>
+    <!-- Coastline sketch -->
+    <path d="M160,590 C140,560 120,520 115,480 C108,430 100,390 95,350 C88,300 82,260 78,220 C74,180 70,140 68,100 C66,70 65,40 64,20"
+          fill="none" stroke="#c5dde6" stroke-width="2" stroke-dasharray="6 4" opacity="0.6"/>
+    <!-- Land hint -->
+    <path d="M160,620 L160,590 C140,560 120,520 115,480 C108,430 100,390 95,350 C88,300 82,260 78,220 C74,180 70,140 68,100 C66,70 65,40 64,20 L64,0 L420,0 L420,620 Z"
+          fill="#faf5ee" opacity="0.5"/>
+    <!-- "Indian Ocean" label -->
+    <text x="52" y="420" font-size="11" fill="#87CEEB" opacity="0.6" transform="rotate(-80,52,420)" font-weight="500" letter-spacing="3">INDIAN OCEAN</text>
 
-    var colors = {1:'#1B6B93',2:'#E8A0BF',3:'#E8734A',4:'#6C63FF',5:'#8B7E74'};
-    var dayNames = {1:'Day 1',2:'Day 2',3:'Day 3',4:'Day 4',5:'Day 5'};
+    <!-- === Day 1: Perth → Lancelin → Pinnacles → Jurien Bay === -->
+    <path d="M310,530 C280,510 230,490 200,460 C180,440 160,410 155,390 C148,370 145,350 148,335"
+          fill="none" stroke="#1B6B93" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow1)"/>
+    <defs>
+      <marker id="arrow1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#1B6B93"/></marker>
+      <marker id="arrow2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#E8A0BF"/></marker>
+      <marker id="arrow3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#E8734A"/></marker>
+      <marker id="arrow4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#6C63FF"/></marker>
+      <marker id="arrow5" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#8B7E74"/></marker>
+    </defs>
+    <!-- Day 1 label -->
+    <rect x="192" y="450" width="24" height="16" rx="4" fill="#1B6B93"/>
+    <text x="204" y="462" text-anchor="middle" font-size="10" fill="white" font-weight="700">D1</text>
 
-    // Key locations (unique places on the map)
-    var places = {
-      perth:       [-31.9385, 115.9672, '珀斯机场'],
-      lancelin:    [-31.0021, 115.3307, 'Lancelin 白沙丘'],
-      lobster:     [-30.4936, 115.0689, 'Lobster Shack'],
-      pinnacles:   [-30.5913, 115.1582, '尖峰石阵'],
-      jurien:      [-30.3067, 115.0374, 'Jurien Bay'],
-      geraldton:   [-28.7761, 114.6113, 'Geraldton'],
-      hutt:        [-28.1562, 114.2389, '粉红湖'],
-      kalbarri:    [-27.7112, 114.1661, 'Kalbarri'],
-      kalbarriNP:  [-27.8208, 114.4614, 'Kalbarri 国家公园'],
-      fremantle:   [-32.0475, 115.7477, 'Fremantle'],
-      rottnest:    [-31.9965, 115.5399, 'Rottnest Island'],
-      kingspark:   [-31.9610, 115.8415, 'Kings Park'],
-      cottesloe:   [-31.9939, 115.7510, 'Cottesloe Beach']
-    };
+    <!-- === Day 2: Jurien Bay → Geraldton → Hutt Lagoon → Kalbarri === -->
+    <path d="M148,335 C140,300 130,260 128,220 C126,190 118,155 110,130 C105,115 98,95 92,80"
+          fill="none" stroke="#E8A0BF" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow2)"/>
+    <rect x="138" y="225" width="24" height="16" rx="4" fill="#E8A0BF"/>
+    <text x="150" y="237" text-anchor="middle" font-size="10" fill="white" font-weight="700">D2</text>
 
-    // Simplified day routes: just the key nodes per day
-    // For the overview map we only show the main direction of travel,
-    // not every return trip. Overlapping segments get offset.
-    var dayRoutes = {
-      1: ['perth','lancelin','lobster','pinnacles','jurien'],
-      2: ['jurien','geraldton','hutt','kalbarri'],
-      3: ['kalbarri','kalbarriNP','geraldton'],   // southbound return
-      4: ['geraldton','fremantle','rottnest'],     // long drive + ferry
-      5: ['kingspark','cottesloe','perth']
-    };
+    <!-- === Day 3: Kalbarri ↔ National Park → Geraldton === -->
+    <path d="M92,80 C110,85 145,95 155,105 C145,115 130,150 128,220"
+          fill="none" stroke="#E8734A" stroke-width="3" stroke-linecap="round" stroke-dasharray="8 4" marker-end="url(#arrow3)"/>
+    <rect x="155" y="108" width="24" height="16" rx="4" fill="#E8734A"/>
+    <text x="167" y="120" text-anchor="middle" font-size="10" fill="white" font-weight="700">D3</text>
 
-    // Offset points perpendicular to segment direction
-    function offsetPt(from, to, px) {
-      var dlat = to[0]-from[0], dlng = to[1]-from[1];
-      var len = Math.sqrt(dlat*dlat+dlng*dlng);
-      if(len===0) return [from[0],from[1]];
-      return [from[0] + (-dlng/len)*px, from[1] + (dlat/len)*px];
-    }
-    function offsetLine(pts, px) {
-      if(pts.length<2) return pts;
-      var out = [];
-      for(var i=0;i<pts.length;i++){
-        var prev=pts[Math.max(0,i-1)], next=pts[Math.min(pts.length-1,i+1)];
-        out.push(offsetPt(prev,next,px));
-      }
-      return out;
-    }
+    <!-- === Day 4: Geraldton → Fremantle → Rottnest === -->
+    <path d="M128,220 C150,300 200,420 240,490 C260,520 270,535 260,548"
+          fill="none" stroke="#6C63FF" stroke-width="3" stroke-linecap="round"/>
+    <path d="M260,548 C240,555 210,555 185,548"
+          fill="none" stroke="#6C63FF" stroke-width="2.5" stroke-dasharray="6 4" stroke-linecap="round" marker-end="url(#arrow4)"/>
+    <rect x="198" y="366" width="24" height="16" rx="4" fill="#6C63FF"/>
+    <text x="210" y="378" text-anchor="middle" font-size="10" fill="white" font-weight="700">D4</text>
 
-    // Arrow at segment midpoint
-    function addArrow(from, to, color) {
-      var midLat=(from[0]+to[0])/2, midLng=(from[1]+to[1])/2;
-      var angle = Math.atan2(to[1]-from[1], to[0]-from[0]) * 180 / Math.PI;
-      var bearing = 90 - angle;
-      var icon = L.divIcon({
-        html: '<div style="transform:rotate('+bearing+'deg);color:'+color+';font-size:16px;font-weight:bold;text-shadow:0 0 3px white,0 0 6px white;">▶</div>',
-        className: '', iconSize:[16,16], iconAnchor:[8,8]
-      });
-      L.marker([midLat,midLng],{icon:icon,interactive:false,zIndexOffset:400}).addTo(map);
-    }
+    <!-- === Day 5: Perth city loop === -->
+    <path d="M310,530 C290,535 275,540 260,548"
+          fill="none" stroke="#8B7E74" stroke-width="3" stroke-linecap="round"/>
+    <path d="M260,548 C275,555 295,555 310,530"
+          fill="none" stroke="#8B7E74" stroke-width="2.5" stroke-dasharray="6 4" stroke-linecap="round" marker-end="url(#arrow5)"/>
+    <rect x="264" y="562" width="24" height="16" rx="4" fill="#8B7E74"/>
+    <text x="276" y="574" text-anchor="middle" font-size="10" fill="white" font-weight="700">D5</text>
 
-    // Day label at midpoint of a polyline
-    function addDayLabel(pts, day) {
-      // pick the middle segment's midpoint
-      var idx = Math.floor(pts.length/2);
-      var prev = pts[Math.max(0,idx-1)], cur = pts[idx];
-      var mid = [(prev[0]+cur[0])/2, (prev[1]+cur[1])/2];
-      var color = colors[day];
-      var icon = L.divIcon({
-        html: '<div style="width:24px;height:24px;border-radius:50%;background:'+color+';color:white;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,0.3);border:2px solid white;font-family:DM Sans,sans-serif;">'+day+'</div>',
-        className: '', iconSize:[24,24], iconAnchor:[12,12]
-      });
-      L.marker(mid,{icon:icon,interactive:false,zIndexOffset:500}).addTo(map);
-    }
+    <!-- Location dots & labels -->
+    <!-- Perth -->
+    <circle cx="310" cy="530" r="6" fill="#1B6B93" stroke="white" stroke-width="2"/>
+    <text x="322" y="535" font-size="12" font-weight="700" fill="#2C2C2C">Perth</text>
+    <text x="322" y="548" font-size="9" fill="#8B7E74">珀斯机场</text>
 
-    // Draw each day with straight lines + arrows
-    var offsetDeg = 0.08;
+    <!-- Lancelin -->
+    <circle cx="200" cy="460" r="4" fill="#1B6B93" stroke="white" stroke-width="1.5"/>
+    <text x="210" y="457" font-size="10" fill="#2C2C2C" font-weight="600">Lancelin</text>
 
-    [1,2,3,4,5].forEach(function(day){
-      var keys = dayRoutes[day];
-      var pts = keys.map(function(k){ return [places[k][0], places[k][1]]; });
-      var color = colors[day];
+    <!-- Pinnacles -->
+    <circle cx="155" cy="390" r="4" fill="#1B6B93" stroke="white" stroke-width="1.5"/>
+    <text x="165" y="393" font-size="10" fill="#2C2C2C" font-weight="600">Pinnacles</text>
 
-      // Offset overlapping segments
-      var drawPts = pts;
-      if(day===2) drawPts = offsetLine(pts, offsetDeg);
-      if(day===3) drawPts = offsetLine(pts, -offsetDeg);
-      if(day===4) {
-        // Geraldton→Fremantle offset, Fremantle→Rottnest dashed (no offset)
-        var drivePts = offsetLine([pts[0],pts[1]], offsetDeg);
-        L.polyline(drivePts, {color:color, weight:4, opacity:0.85}).addTo(map);
-        addArrow(drivePts[0], drivePts[1], color);
-        // Ferry dashed
-        L.polyline([pts[1],pts[2]], {color:color, weight:3, opacity:0.7, dashArray:'8 6'}).addTo(map);
-        addArrow(pts[1], pts[2], color);
-        return;
-      }
+    <!-- Jurien Bay -->
+    <circle cx="148" cy="335" r="5" fill="#1B6B93" stroke="white" stroke-width="2"/>
+    <text x="160" y="332" font-size="10" fill="#2C2C2C" font-weight="600">Jurien Bay</text>
 
-      L.polyline(drawPts, {color:color, weight:4, opacity:0.85}).addTo(map);
+    <!-- Geraldton -->
+    <circle cx="128" cy="220" r="5" fill="#E8A0BF" stroke="white" stroke-width="2"/>
+    <text x="140" y="216" font-size="11" font-weight="700" fill="#2C2C2C">Geraldton</text>
 
-      // Arrows on each segment
-      for(var i=0;i<drawPts.length-1;i++){
-        addArrow(drawPts[i], drawPts[i+1], color);
-      }
-    });
+    <!-- Hutt Lagoon -->
+    <circle cx="110" cy="130" r="4" fill="#E8A0BF" stroke="white" stroke-width="1.5"/>
+    <text x="120" y="128" font-size="10" fill="#E8A0BF" font-weight="600">Hutt Lagoon</text>
+    <text x="120" y="140" font-size="9" fill="#8B7E74">粉红湖</text>
 
-    // Place location markers — one per unique place, always show name
-    // Build order index: for each place, find which day and position
-    var placeDay = {};
-    var placeOrder = {};
-    [1,2,3,4,5].forEach(function(d){
-      dayRoutes[d].forEach(function(k, idx){
-        if(!placeDay[k]) {
-          placeDay[k] = d;
-          placeOrder[k] = idx + 1;
-        }
-      });
-    });
+    <!-- Kalbarri -->
+    <circle cx="92" cy="80" r="5" fill="#E8734A" stroke="white" stroke-width="2"/>
+    <text x="104" y="76" font-size="11" font-weight="700" fill="#2C2C2C">Kalbarri</text>
 
-    var placeKeys = Object.keys(places);
-    placeKeys.forEach(function(key){
-      var p = places[key];
-      var lat = p[0], lng = p[1], name = p[2];
-      var day = placeDay[key] || 1;
-      var order = placeOrder[key] || 1;
-      var color = colors[day];
+    <!-- Kalbarri NP -->
+    <circle cx="155" cy="105" r="4" fill="#E8734A" stroke="white" stroke-width="1.5"/>
+    <text x="165" y="102" font-size="9" fill="#E8734A" font-weight="600">国家公园</text>
 
-      var dotIcon = L.divIcon({
-        html: '<div style="width:20px;height:20px;border-radius:50%;background:'+color+';color:white;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,0.3);border:2px solid white;font-family:DM Sans,sans-serif;">'+order+'</div>',
-        className: '',
-        iconSize: [20, 20],
-        iconAnchor: [10, 10]
-      });
+    <!-- Fremantle -->
+    <circle cx="260" cy="548" r="4.5" fill="#6C63FF" stroke="white" stroke-width="1.5"/>
+    <text x="240" y="542" font-size="10" fill="#2C2C2C" font-weight="600" text-anchor="end">Fremantle</text>
 
-      L.marker([lat, lng], {icon: dotIcon, zIndexOffset: 600})
-        .bindTooltip(name, {
-          permanent: true,
-          direction: 'right',
-          offset: [8, 0],
-          className: 'map-tooltip-day-' + day
-        })
-        .addTo(map);
-    });
+    <!-- Rottnest -->
+    <circle cx="185" cy="548" r="4" fill="#6C63FF" stroke="white" stroke-width="1.5"/>
+    <text x="170" y="542" font-size="9" fill="#6C63FF" font-weight="600" text-anchor="end">Rottnest Is.</text>
 
-    // Fit bounds
-    var allPts = placeKeys.map(function(k){ return [places[k][0], places[k][1]]; });
-    map.fitBounds(allPts, {padding: [40, 40]});
-  })();
-  </script>
-  <style>
-    .map-tooltip {
-      font-family: 'Noto Sans SC', 'DM Sans', sans-serif;
-      font-size: 13px;
-      font-weight: 600;
-      padding: 4px 10px;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-    }
-    .map-tooltip-permanent,
-    .map-tooltip-day-1, .map-tooltip-day-2, .map-tooltip-day-3, .map-tooltip-day-4, .map-tooltip-day-5 {
-      font-family: 'Noto Sans SC', 'DM Sans', sans-serif;
-      font-size: 11px;
-      font-weight: 600;
-      padding: 2px 7px;
-      border-radius: 6px;
-      background: rgba(255,255,255,0.92);
-      box-shadow: 0 1px 6px rgba(0,0,0,0.1);
-      white-space: nowrap;
-    }
-    .map-tooltip-permanent::before,
-    .map-tooltip-day-1::before, .map-tooltip-day-2::before, .map-tooltip-day-3::before, .map-tooltip-day-4::before, .map-tooltip-day-5::before {
-      border: none !important;
-    }
-    .map-tooltip-day-1 { color: #1B6B93; border: 2px solid #1B6B93; }
-    .map-tooltip-day-2 { color: #E8A0BF; border: 2px solid #E8A0BF; }
-    .map-tooltip-day-3 { color: #E8734A; border: 2px solid #E8734A; }
-    .map-tooltip-day-4 { color: #6C63FF; border: 2px solid #6C63FF; }
-    .map-tooltip-day-5 { color: #8B7E74; border: 2px solid #8B7E74; }
-  </style>
+    <!-- Cottesloe / Kings Park near Perth -->
+    <circle cx="290" cy="545" r="3" fill="#8B7E74" stroke="white" stroke-width="1"/>
+
+    <!-- North arrow -->
+    <text x="380" y="35" font-size="14" font-weight="700" fill="#8B7E74" text-anchor="middle">N</text>
+    <path d="M380,40 L380,62" stroke="#8B7E74" stroke-width="1.5" marker-end="url(#arrow5)"/>
+    <text x="380" y="77" font-size="9" fill="#8B7E74" text-anchor="middle">↓ S</text>
+
+    <!-- Scale hint -->
+    <line x1="320" y1="600" x2="390" y2="600" stroke="#8B7E74" stroke-width="1"/>
+    <text x="355" y="595" text-anchor="middle" font-size="8" fill="#8B7E74">~200 km</text>
+  </svg>
 </section>
 
 <!-- Timeline -->
@@ -909,6 +821,8 @@
   珀斯 5 天自驾行程 · 2026.04.30 – 05.04 · Generated by Claude
 </footer>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 (function(){
   var colors = {1:'#1B6B93',2:'#E8A0BF',3:'#E8734A',4:'#6C63FF',5:'#8B7E74'};
