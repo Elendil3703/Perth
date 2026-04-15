@@ -142,7 +142,7 @@
 
   /* Timeline */
   .timeline-section {
-    max-width: 900px;
+    max-width: 1100px;
     margin: 0 auto;
     padding: 4rem 1.5rem;
   }
@@ -151,6 +151,26 @@
     position: relative;
     margin-bottom: 4rem;
     padding-left: 3rem;
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+  }
+
+  .day-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .day-minimap {
+    flex-shrink: 0;
+    width: 220px;
+    height: 220px;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+    border: 2px solid #eee;
+    position: sticky;
+    top: 1.5rem;
   }
 
   .day-block::before {
@@ -355,8 +375,9 @@
     border-top: 1px solid #eee;
   }
 
-  @media (max-width: 600px) {
-    .day-block { padding-left: 2.2rem; }
+  @media (max-width: 700px) {
+    .day-block { padding-left: 2.2rem; flex-direction: column; }
+    .day-minimap { width: 100%; height: 200px; position: static; }
     .stop-card { padding: 1rem 1.2rem; }
     .budget-card, .tips-card { padding: 1.8rem; }
     .hero-meta { gap: 0.8rem; }
@@ -418,25 +439,25 @@
       5: '#8B7E74'
     };
 
-    // Stops: [lat, lng, name, day, orderLabel]
+    // Stops: [lat, lng, name, day, order]
     var stops = [
-      [-31.9385, 115.9672, '珀斯机场', 1, '1-①'],
-      [-31.0021, 115.3307, 'Lancelin 白沙丘', 1, '1-②'],
-      [-30.4936, 115.0689, 'Lobster Shack', 1, '1-③'],
-      [-30.5913, 115.1582, '尖峰石阵 Pinnacles', 1, '1-④'],
-      [-30.3067, 115.0374, 'Jurien Bay 住宿', 1, '1-⑤'],
-      [-28.7761, 114.6113, 'Geraldton 午餐', 2, '2-②'],
-      [-28.1562, 114.2389, '粉红湖 Hutt Lagoon', 2, '2-③'],
-      [-27.7112, 114.1661, 'Kalbarri 住宿', 2, '2-④'],
-      [-27.8208, 114.4614, 'Kalbarri 国家公园', 3, '3-①'],
-      [-27.7112, 114.1661, 'Kalbarri 午餐', 3, '3-②'],
-      [-28.7761, 114.6113, 'Geraldton 住宿', 3, '3-③'],
-      [-32.0475, 115.7477, 'Fremantle 码头', 4, '4-②'],
-      [-31.9965, 115.5399, 'Rottnest Island', 4, '4-③'],
-      [-32.0475, 115.7477, 'Fremantle 返回', 4, '4-④'],
-      [-31.9610, 115.8415, 'Kings Park', 5, '5-①'],
-      [-31.9939, 115.7510, 'Cottesloe Beach', 5, '5-②'],
-      [-31.9385, 115.9672, '珀斯机场 还车', 5, '5-③']
+      [-31.9385, 115.9672, '珀斯机场', 1, 1],
+      [-31.0021, 115.3307, 'Lancelin 白沙丘', 1, 2],
+      [-30.4936, 115.0689, 'Lobster Shack', 1, 3],
+      [-30.5913, 115.1582, '尖峰石阵 Pinnacles', 1, 4],
+      [-30.3067, 115.0374, 'Jurien Bay 住宿', 1, 5],
+      [-28.7761, 114.6113, 'Geraldton 午餐', 2, 2],
+      [-28.1562, 114.2389, '粉红湖 Hutt Lagoon', 2, 3],
+      [-27.7112, 114.1661, 'Kalbarri 住宿', 2, 4],
+      [-27.8208, 114.4614, 'Kalbarri 国家公园', 3, 1],
+      [-27.7112, 114.1661, 'Kalbarri 午餐', 3, 2],
+      [-28.7761, 114.6113, 'Geraldton 住宿', 3, 3],
+      [-32.0475, 115.7477, 'Fremantle 码头', 4, 2],
+      [-31.9965, 115.5399, 'Rottnest Island', 4, 3],
+      [-32.0475, 115.7477, 'Fremantle 返回', 4, 4],
+      [-31.9610, 115.8415, 'Kings Park', 5, 1],
+      [-31.9939, 115.7510, 'Cottesloe Beach', 5, 2],
+      [-31.9385, 115.9672, '珀斯机场 还车', 5, 3]
     ];
 
     var routes = {
@@ -502,27 +523,24 @@
       }
     });
 
-    // Place numbered markers with day label
+    // Place numbered markers
     var placed = {};
     stops.forEach(function(s, idx) {
       var key = s[0].toFixed(3) + ',' + s[1].toFixed(3);
       var day = s[3];
       var color = colors[day];
-      var label = s[4]; // e.g. "1-①"
-      var dayNum = label.split('-')[0];
-      var orderNum = label.split('-')[1];
+      var order = s[4];
 
       // For duplicate locations, stack labels
       if (placed[key]) {
-        // Add an extra label offset below
         var existingCount = placed[key];
         placed[key] = existingCount + 1;
-        var offsetY = existingCount * 22;
+        var offsetY = existingCount * 20;
         var labelIcon = L.divIcon({
-          html: '<div style="background:'+color+';color:white;font-size:11px;font-weight:700;padding:1px 6px;border-radius:10px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,0.3);border:1.5px solid white;font-family:Noto Sans SC,DM Sans,sans-serif;">D'+dayNum+' '+orderNum+'</div>',
+          html: '<div style="color:'+color+';font-size:13px;font-weight:900;text-shadow:-1px -1px 0 white,1px -1px 0 white,-1px 1px 0 white,1px 1px 0 white,0 0 4px white;font-family:DM Sans,sans-serif;">'+order+'</div>',
           className: '',
           iconSize: [0, 0],
-          iconAnchor: [-12, -offsetY]
+          iconAnchor: [-10, -offsetY]
         });
         L.marker([s[0], s[1]], {icon: labelIcon, interactive: false}).addTo(map);
         return;
@@ -549,10 +567,10 @@
 
       // Number label next to dot
       var labelIcon = L.divIcon({
-        html: '<div style="background:'+color+';color:white;font-size:11px;font-weight:700;padding:1px 6px;border-radius:10px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,0.3);border:1.5px solid white;font-family:Noto Sans SC,DM Sans,sans-serif;">D'+dayNum+' '+orderNum+'</div>',
+        html: '<div style="color:'+color+';font-size:13px;font-weight:900;text-shadow:-1px -1px 0 white,1px -1px 0 white,-1px 1px 0 white,1px 1px 0 white,0 0 4px white;font-family:DM Sans,sans-serif;">'+order+'</div>',
         className: '',
         iconSize: [0, 0],
-        iconAnchor: [-12, 6]
+        iconAnchor: [-10, 4]
       });
       L.marker([s[0], s[1]], {icon: labelIcon, interactive: false}).addTo(map);
     });
@@ -580,210 +598,225 @@
   <!-- Day 1 -->
   <div class="day-block">
     <div class="day-number">1</div>
-    <div class="day-header">
-      <h3>沿海北上 · 白沙与石阵</h3>
-      <div class="date">4月30日 周四</div>
-      <div class="route">Perth Airport → Lancelin → Cervantes → Pinnacles → Jurien Bay</div>
-    </div>
+    <div class="day-content">
+      <div class="day-header">
+        <h3>沿海北上 · 白沙与石阵</h3>
+        <div class="date">4月30日 周四</div>
+        <div class="route">Perth Airport → Lancelin → Cervantes → Pinnacles → Jurien Bay</div>
+      </div>
 
-    <div class="stop-card">
-      <div class="stop-time">09:00</div>
-      <div class="stop-name">珀斯机场取车</div>
-      <div class="stop-desc">T1/T2 航站楼取车柜台，建议提前在 VroomVroomVroom 或 Cheapflights 比价预订。Compact 车型约 $37/天起。</div>
-      <span class="stop-tag tag-transport">🚗 取车</span>
-    </div>
+      <div class="stop-card">
+        <div class="stop-time">09:00</div>
+        <div class="stop-name">珀斯机场取车</div>
+        <div class="stop-desc">T1/T2 航站楼取车柜台，建议提前在 VroomVroomVroom 或 Cheapflights 比价预订。Compact 车型约 $37/天起。</div>
+        <span class="stop-tag tag-transport">🚗 取车</span>
+      </div>
 
-    <div class="stop-card highlight">
-      <div class="stop-time">10:30 – 12:00</div>
-      <div class="stop-name">Lancelin 白沙丘</div>
-      <div class="stop-desc">巨型白色沙丘，可租滑沙板（$10）或骑 ATV 四驱车，沙漠与印度洋对比出片极佳。建议带防沙面罩和水。</div>
-      <span class="stop-tag tag-scenic">🏜️ 白沙滩</span>
-      <span class="stop-tag tag-adventure">🛷 滑沙</span>
-    </div>
+      <div class="stop-card highlight">
+        <div class="stop-time">10:30 – 12:00</div>
+        <div class="stop-name">Lancelin 白沙丘</div>
+        <div class="stop-desc">巨型白色沙丘，可租滑沙板（$10）或骑 ATV 四驱车，沙漠与印度洋对比出片极佳。建议带防沙面罩和水。</div>
+        <span class="stop-tag tag-scenic">🏜️ 白沙滩</span>
+        <span class="stop-tag tag-adventure">🛷 滑沙</span>
+      </div>
 
-    <div class="stop-card">
-      <div class="stop-time">12:30 – 13:30</div>
-      <div class="stop-name">Lobster Shack 龙虾午餐</div>
-      <div class="stop-desc">Cervantes 当地名店，海鲜拼盘或整只龙虾套餐。注意厨房 15:00 关闭，别太晚到。两人约 $100+。</div>
-      <span class="stop-tag tag-food">🦞 美食</span>
-    </div>
+      <div class="stop-card">
+        <div class="stop-time">12:30 – 13:30</div>
+        <div class="stop-name">Lobster Shack 龙虾午餐</div>
+        <div class="stop-desc">Cervantes 当地名店，海鲜拼盘或整只龙虾套餐。注意厨房 15:00 关闭，别太晚到。两人约 $100+。</div>
+        <span class="stop-tag tag-food">🦞 美食</span>
+      </div>
 
-    <div class="stop-card highlight">
-      <div class="stop-time">14:30 – 16:00</div>
-      <div class="stop-name">尖峰石阵 Pinnacles Desert</div>
-      <div class="stop-desc">Nambung 国家公园内，4.5km 车道穿行数千根石灰岩柱，有些高达 3.5 米。傍晚金色光影下最壮观。门票 $15/车。</div>
-      <span class="stop-tag tag-scenic">🪨 地标</span>
-    </div>
+      <div class="stop-card highlight">
+        <div class="stop-time">14:30 – 16:00</div>
+        <div class="stop-name">尖峰石阵 Pinnacles Desert</div>
+        <div class="stop-desc">Nambung 国家公园内，4.5km 车道穿行数千根石灰岩柱，有些高达 3.5 米。傍晚金色光影下最壮观。门票 $15/车。</div>
+        <span class="stop-tag tag-scenic">🪨 地标</span>
+      </div>
 
-    <div class="stop-card">
-      <div class="stop-time">17:00</div>
-      <div class="stop-name">住宿 Jurien Bay</div>
-      <div class="stop-desc">安静的海滨小镇，推荐 Jurien Bay Motel Apartments。有厨房可自己做饭。当天总驾驶约 2.5h。</div>
-      <span class="stop-tag tag-stay">🏨 住宿</span>
+      <div class="stop-card">
+        <div class="stop-time">17:00</div>
+        <div class="stop-name">住宿 Jurien Bay</div>
+        <div class="stop-desc">安静的海滨小镇，推荐 Jurien Bay Motel Apartments。有厨房可自己做饭。当天总驾驶约 2.5h。</div>
+        <span class="stop-tag tag-stay">🏨 住宿</span>
+      </div>
     </div>
+    <div class="day-minimap" id="minimap-1"></div>
   </div>
 
   <!-- Day 2 -->
   <div class="day-block">
     <div class="day-number">2</div>
-    <div class="day-header">
-      <h3>印度洋公路 · 粉红湖</h3>
-      <div class="date">5月1日 周五</div>
-      <div class="route">Jurien Bay → Geraldton → Hutt Lagoon → Kalbarri</div>
-    </div>
+    <div class="day-content">
+      <div class="day-header">
+        <h3>印度洋公路 · 粉红湖</h3>
+        <div class="date">5月1日 周五</div>
+        <div class="route">Jurien Bay → Geraldton → Hutt Lagoon → Kalbarri</div>
+      </div>
 
-    <div class="stop-card">
-      <div class="stop-time">09:00</div>
-      <div class="stop-name">出发北上</div>
-      <div class="stop-desc">沿 Indian Ocean Drive 北行，沿途可停 Green Head、Dongara 等小镇看海岸。</div>
-      <span class="stop-tag tag-transport">🛣️ 公路</span>
-    </div>
+      <div class="stop-card">
+        <div class="stop-time">09:00</div>
+        <div class="stop-name">出发北上</div>
+        <div class="stop-desc">沿 Indian Ocean Drive 北行，沿途可停 Green Head、Dongara 等小镇看海岸。</div>
+        <span class="stop-tag tag-transport">🛣️ 公路</span>
+      </div>
 
-    <div class="stop-card">
-      <div class="stop-time">12:00 – 13:00</div>
-      <div class="stop-name">Geraldton 午餐补给</div>
-      <div class="stop-desc">西澳中部最大城镇，加油、午餐。可顺便看看 HMAS Sydney Memorial 和海港。</div>
-      <span class="stop-tag tag-food">🍽️ 午餐</span>
-    </div>
+      <div class="stop-card">
+        <div class="stop-time">12:00 – 13:00</div>
+        <div class="stop-name">Geraldton 午餐补给</div>
+        <div class="stop-desc">西澳中部最大城镇，加油、午餐。可顺便看看 HMAS Sydney Memorial 和海港。</div>
+        <span class="stop-tag tag-food">🍽️ 午餐</span>
+      </div>
 
-    <div class="stop-card pink">
-      <div class="stop-time">14:30 – 15:15</div>
-      <div class="stop-name">粉红湖 Hutt Lagoon</div>
-      <div class="stop-desc">粉红色盐湖，颜色来自藻类的 β-胡萝卜素。多换几个角度拍（桥上、远端土路都有好机位），晴天颜色最鲜艳。可考虑 buggy tour 或无人机航拍。</div>
-      <span class="stop-tag tag-scenic">💗 粉红湖</span>
-    </div>
+      <div class="stop-card pink">
+        <div class="stop-time">14:30 – 15:15</div>
+        <div class="stop-name">粉红湖 Hutt Lagoon</div>
+        <div class="stop-desc">粉红色盐湖，颜色来自藻类的 β-胡萝卜素。多换几个角度拍（桥上、远端土路都有好机位），晴天颜色最鲜艳。可考虑 buggy tour 或无人机航拍。</div>
+        <span class="stop-tag tag-scenic">💗 粉红湖</span>
+      </div>
 
-    <div class="stop-card">
-      <div class="stop-time">16:00</div>
-      <div class="stop-name">住宿 Kalbarri</div>
-      <div class="stop-desc">海边小镇，推荐 Kalbarri Palm Resort。傍晚去海边看日落。当天总驾驶约 4.5h（分段开）。</div>
-      <span class="stop-tag tag-stay">🏨 住宿</span>
+      <div class="stop-card">
+        <div class="stop-time">16:00</div>
+        <div class="stop-name">住宿 Kalbarri</div>
+        <div class="stop-desc">海边小镇，推荐 Kalbarri Palm Resort。傍晚去海边看日落。当天总驾驶约 4.5h（分段开）。</div>
+        <span class="stop-tag tag-stay">🏨 住宿</span>
+      </div>
     </div>
+    <div class="day-minimap" id="minimap-2"></div>
   </div>
 
   <!-- Day 3 -->
   <div class="day-block">
     <div class="day-number">3</div>
-    <div class="day-header">
-      <h3>峡谷与悬崖 · 卡尔巴里</h3>
-      <div class="date">5月2日 周六</div>
-      <div class="route">Kalbarri → Kalbarri National Park → Geraldton</div>
-    </div>
-
-    <div class="stop-card highlight">
-      <div class="stop-time">09:00 – 12:30</div>
-      <div class="stop-name">卡尔巴里国家公园</div>
-      <div class="stop-desc">
-        <strong>Nature's Window</strong> — 天然岩石拱框取景，1km 步道，约45min<br>
-        <strong>Z-Bend Lookout</strong> — 俯瞰 Murchison River 峡谷<br>
-        <strong>Skywalk</strong> — 玻璃栈道悬崖观景台，100m 高空<br>
-        门票 $15/车（含所有景点），不赶时间慢慢走
+    <div class="day-content">
+      <div class="day-header">
+        <h3>峡谷与悬崖 · 卡尔巴里</h3>
+        <div class="date">5月2日 周六</div>
+        <div class="route">Kalbarri → Kalbarri National Park → Geraldton</div>
       </div>
-      <span class="stop-tag tag-scenic">🏞️ 国家公园</span>
-      <span class="stop-tag tag-adventure">🥾 徒步</span>
-    </div>
 
-    <div class="stop-card">
-      <div class="stop-time">12:30 – 13:30</div>
-      <div class="stop-name">Kalbarri 镇午餐</div>
-      <div class="stop-desc">镇上吃午餐，可以去看鹈鹕喂食（通常在河边 ~08:45，如果早起赶得上）。</div>
-      <span class="stop-tag tag-food">🍽️ 午餐</span>
-    </div>
+      <div class="stop-card highlight">
+        <div class="stop-time">09:00 – 12:30</div>
+        <div class="stop-name">卡尔巴里国家公园</div>
+        <div class="stop-desc">
+          <strong>Nature's Window</strong> — 天然岩石拱框取景，1km 步道，约45min<br>
+          <strong>Z-Bend Lookout</strong> — 俯瞰 Murchison River 峡谷<br>
+          <strong>Skywalk</strong> — 玻璃栈道悬崖观景台，100m 高空<br>
+          门票 $15/车（含所有景点），不赶时间慢慢走
+        </div>
+        <span class="stop-tag tag-scenic">🏞️ 国家公园</span>
+        <span class="stop-tag tag-adventure">🥾 徒步</span>
+      </div>
 
-    <div class="stop-card">
-      <div class="stop-time">14:00 → 16:00</div>
-      <div class="stop-name">回程至 Geraldton（住宿）</div>
-      <div class="stop-desc">只回开 2 小时到 Geraldton，不赶回珀斯。晚上海边散步吃晚饭，轻松收尾。</div>
-      <span class="stop-tag tag-stay">🏨 住宿</span>
+      <div class="stop-card">
+        <div class="stop-time">12:30 – 13:30</div>
+        <div class="stop-name">Kalbarri 镇午餐</div>
+        <div class="stop-desc">镇上吃午餐，可以去看鹈鹕喂食（通常在河边 ~08:45，如果早起赶得上）。</div>
+        <span class="stop-tag tag-food">🍽️ 午餐</span>
+      </div>
+
+      <div class="stop-card">
+        <div class="stop-time">14:00 → 16:00</div>
+        <div class="stop-name">回程至 Geraldton（住宿）</div>
+        <div class="stop-desc">只回开 2 小时到 Geraldton，不赶回珀斯。晚上海边散步吃晚饭，轻松收尾。</div>
+        <span class="stop-tag tag-stay">🏨 住宿</span>
+      </div>
     </div>
+    <div class="day-minimap" id="minimap-3"></div>
   </div>
 
   <!-- Day 4 -->
   <div class="day-block">
     <div class="day-number">4</div>
-    <div class="day-header">
-      <h3>跳伞日 · Rottnest Island</h3>
-      <div class="date">5月3日 周日</div>
-      <div class="route">Geraldton → Fremantle → Rottnest Island → Perth</div>
-    </div>
-
-    <div class="stop-card">
-      <div class="stop-time">07:30 → 11:00</div>
-      <div class="stop-name">Geraldton 开回 Fremantle</div>
-      <div class="stop-desc">这天唯一需要早起。约 3.5 小时车程到 Fremantle，停车后步行到码头。</div>
-      <span class="stop-tag tag-transport">🚗 3.5h 车程</span>
-    </div>
-
-    <div class="stop-card">
-      <div class="stop-time">11:30 – 12:00</div>
-      <div class="stop-name">渡轮前往 Rottnest Island</div>
-      <div class="stop-desc">从 Fremantle B-Shed 码头出发，船程约 30 分钟。渡轮往返约 $80–100。建议预订 Geronimo 跳伞+渡轮套餐。</div>
-      <span class="stop-tag tag-transport">⛴️ 渡轮</span>
-    </div>
-
-    <div class="stop-card sky">
-      <div class="stop-time">12:30 – 14:30</div>
-      <div class="stop-name">Skydive Geronimo 15,000ft 跳伞</div>
-      <div class="stop-desc">
-        从 15,000 英尺跳下，66 秒自由落体 + 5 分钟伞降，降落在岛上白沙滩。<br>
-        跳伞 ~$549 + 拍照 $129 / 视频+照片 $159<br>
-        <strong>跳伞看天气，当天早上致电 1300 449 669 确认</strong>
+    <div class="day-content">
+      <div class="day-header">
+        <h3>跳伞日 · Rottnest Island</h3>
+        <div class="date">5月3日 周日</div>
+        <div class="route">Geraldton → Fremantle → Rottnest Island → Perth</div>
       </div>
-      <span class="stop-tag tag-adventure">🪂 跳伞</span>
-    </div>
 
-    <div class="stop-card">
-      <div class="stop-time">14:30 – 16:30</div>
-      <div class="stop-name">Rottnest Island 环岛</div>
-      <div class="stop-desc">租自行车环岛，拍 quokka 短尾矮袋鼠自拍，Parker Point / The Basin 看海滩，灯塔打卡。</div>
-      <span class="stop-tag tag-scenic">🚲 环岛</span>
-    </div>
+      <div class="stop-card">
+        <div class="stop-time">07:30 → 11:00</div>
+        <div class="stop-name">Geraldton 开回 Fremantle</div>
+        <div class="stop-desc">这天唯一需要早起。约 3.5 小时车程到 Fremantle，停车后步行到码头。</div>
+        <span class="stop-tag tag-transport">🚗 3.5h 车程</span>
+      </div>
 
-    <div class="stop-card">
-      <div class="stop-time">16:30 → 晚上</div>
-      <div class="stop-name">渡轮回 Fremantle → 住珀斯</div>
-      <div class="stop-desc">回到 Fremantle 后逛逛老街，吃 fish & chips。开车回珀斯市区住宿。</div>
-      <span class="stop-tag tag-food">🐟 晚餐</span>
-      <span class="stop-tag tag-stay">🏨 住宿</span>
+      <div class="stop-card">
+        <div class="stop-time">11:30 – 12:00</div>
+        <div class="stop-name">渡轮前往 Rottnest Island</div>
+        <div class="stop-desc">从 Fremantle B-Shed 码头出发，船程约 30 分钟。渡轮往返约 $80–100。建议预订 Geronimo 跳伞+渡轮套餐。</div>
+        <span class="stop-tag tag-transport">⛴️ 渡轮</span>
+      </div>
+
+      <div class="stop-card sky">
+        <div class="stop-time">12:30 – 14:30</div>
+        <div class="stop-name">Skydive Geronimo 15,000ft 跳伞</div>
+        <div class="stop-desc">
+          从 15,000 英尺跳下，66 秒自由落体 + 5 分钟伞降，降落在岛上白沙滩。<br>
+          跳伞 ~$549 + 拍照 $129 / 视频+照片 $159<br>
+          <strong>跳伞看天气，当天早上致电 1300 449 669 确认</strong>
+        </div>
+        <span class="stop-tag tag-adventure">🪂 跳伞</span>
+      </div>
+
+      <div class="stop-card">
+        <div class="stop-time">14:30 – 16:30</div>
+        <div class="stop-name">Rottnest Island 环岛</div>
+        <div class="stop-desc">租自行车环岛，拍 quokka 短尾矮袋鼠自拍，Parker Point / The Basin 看海滩，灯塔打卡。</div>
+        <span class="stop-tag tag-scenic">🚲 环岛</span>
+      </div>
+
+      <div class="stop-card">
+        <div class="stop-time">16:30 → 晚上</div>
+        <div class="stop-name">渡轮回 Fremantle → 住珀斯</div>
+        <div class="stop-desc">回到 Fremantle 后逛逛老街，吃 fish & chips。开车回珀斯市区住宿。</div>
+        <span class="stop-tag tag-food">🐟 晚餐</span>
+        <span class="stop-tag tag-stay">🏨 住宿</span>
+      </div>
     </div>
+    <div class="day-minimap" id="minimap-4"></div>
   </div>
 
   <!-- Day 5 -->
   <div class="day-block">
     <div class="day-number">5</div>
-    <div class="day-header">
-      <h3>珀斯半日游 · 返程</h3>
-      <div class="date">5月4日 周一</div>
-      <div class="route">Perth → Kings Park → Cottesloe Beach → Airport</div>
-    </div>
+    <div class="day-content">
+      <div class="day-header">
+        <h3>珀斯半日游 · 返程</h3>
+        <div class="date">5月4日 周一</div>
+        <div class="route">Perth → Kings Park → Cottesloe Beach → Airport</div>
+      </div>
 
-    <div class="stop-card">
-      <div class="stop-time">09:00 – 10:15</div>
-      <div class="stop-name">Kings Park</div>
-      <div class="stop-desc">俯瞰珀斯天际线和 Swan River 的最佳位置，植物园免费。步道散步 1–1.5 小时。</div>
-      <span class="stop-tag tag-scenic">🌿 公园</span>
-    </div>
+      <div class="stop-card">
+        <div class="stop-time">09:00 – 10:15</div>
+        <div class="stop-name">Kings Park</div>
+        <div class="stop-desc">俯瞰珀斯天际线和 Swan River 的最佳位置，植物园免费。步道散步 1–1.5 小时。</div>
+        <span class="stop-tag tag-scenic">🌿 公园</span>
+      </div>
 
-    <div class="stop-card">
-      <div class="stop-time">10:30 – 11:15</div>
-      <div class="stop-name">Cottesloe Beach</div>
-      <div class="stop-desc">珀斯最有名的白沙滩，清澈海水，走走拍拍。路边可免费停车 3 小时。</div>
-      <span class="stop-tag tag-scenic">🏖️ 海滩</span>
-    </div>
+      <div class="stop-card">
+        <div class="stop-time">10:30 – 11:15</div>
+        <div class="stop-name">Cottesloe Beach</div>
+        <div class="stop-desc">珀斯最有名的白沙滩，清澈海水，走走拍拍。路边可免费停车 3 小时。</div>
+        <span class="stop-tag tag-scenic">🏖️ 海滩</span>
+      </div>
 
-    <div class="stop-card">
-      <div class="stop-time">11:30 – 12:30</div>
-      <div class="stop-name">Elizabeth Quay / 市区</div>
-      <div class="stop-desc">水岸区喝杯咖啡，最后逛逛。</div>
-      <span class="stop-tag tag-food">☕ 咖啡</span>
-    </div>
+      <div class="stop-card">
+        <div class="stop-time">11:30 – 12:30</div>
+        <div class="stop-name">Elizabeth Quay / 市区</div>
+        <div class="stop-desc">水岸区喝杯咖啡，最后逛逛。</div>
+        <span class="stop-tag tag-food">☕ 咖啡</span>
+      </div>
 
-    <div class="stop-card">
-      <div class="stop-time">14:00</div>
-      <div class="stop-name">珀斯机场还车 → 登机</div>
-      <div class="stop-desc">留足时间还车和过安检。旅程结束！</div>
-      <span class="stop-tag tag-transport">✈️ 还车</span>
+      <div class="stop-card">
+        <div class="stop-time">14:00</div>
+        <div class="stop-name">珀斯机场还车 → 登机</div>
+        <div class="stop-desc">留足时间还车和过安检。旅程结束！</div>
+        <span class="stop-tag tag-transport">✈️ 还车</span>
+      </div>
     </div>
+    <div class="day-minimap" id="minimap-5"></div>
   </div>
 
 </section>
@@ -838,7 +871,102 @@
   珀斯 5 天自驾行程 · 2026.04.30 – 05.04 · Generated by Claude
 </footer>
 
+<script>
+(function(){
+  var colors = {1:'#1B6B93',2:'#E8A0BF',3:'#E8734A',4:'#6C63FF',5:'#8B7E74'};
 
+  // Day waypoints: [lat, lng, name, order]
+  var dayData = {
+    1: [
+      [-31.9385,115.9672,'珀斯机场',1],
+      [-31.0021,115.3307,'Lancelin 白沙丘',2],
+      [-30.4936,115.0689,'Lobster Shack',3],
+      [-30.5913,115.1582,'尖峰石阵',4],
+      [-30.3067,115.0374,'Jurien Bay',5]
+    ],
+    2: [
+      [-30.3067,115.0374,'Jurien Bay 出发',1],
+      [-28.7761,114.6113,'Geraldton',2],
+      [-28.1562,114.2389,'粉红湖',3],
+      [-27.7112,114.1661,'Kalbarri',4]
+    ],
+    3: [
+      [-27.7112,114.1661,'Kalbarri 出发',1],
+      [-27.8208,114.4614,'国家公园',2],
+      [-27.7112,114.1661,'Kalbarri 午餐',3],
+      [-28.7761,114.6113,'Geraldton',4]
+    ],
+    4: [
+      [-28.7761,114.6113,'Geraldton 出发',1],
+      [-32.0475,115.7477,'Fremantle',2],
+      [-31.9965,115.5399,'Rottnest Island',3],
+      [-32.0475,115.7477,'Fremantle 返回',4]
+    ],
+    5: [
+      [-31.9610,115.8415,'Kings Park',1],
+      [-31.9939,115.7510,'Cottesloe Beach',2],
+      [-31.9385,115.9672,'珀斯机场',3]
+    ]
+  };
+
+  function fetchRoute(waypoints, callback) {
+    var coords = waypoints.map(function(wp){ return wp[1]+','+wp[0]; }).join(';');
+    var url = 'https://router.project-osrm.org/route/v1/driving/'+coords+'?overview=full&geometries=geojson';
+    fetch(url).then(function(r){return r.json();}).then(function(data){
+      if(data.code==='Ok' && data.routes && data.routes.length>0){
+        callback(data.routes[0].geometry.coordinates.map(function(c){return [c[1],c[0]];}));
+      } else { callback(waypoints.map(function(w){return [w[0],w[1]];})); }
+    }).catch(function(){ callback(waypoints.map(function(w){return [w[0],w[1]];})); });
+  }
+
+  function initMinimap(day) {
+    var el = document.getElementById('minimap-'+day);
+    if(!el) return;
+    var m = L.map(el, {
+      scrollWheelZoom: false, dragging: false, zoomControl: false,
+      doubleClickZoom: false, boxZoom: false, keyboard: false,
+      touchZoom: false, attributionControl: false
+    });
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18}).addTo(m);
+
+    var pts = dayData[day];
+    var color = colors[day];
+    var wpArr = pts.map(function(p){return [p[0],p[1]];});
+
+    // Draw route
+    if(day === 4) {
+      // Driving: Geraldton → Fremantle
+      fetchRoute([wpArr[0], wpArr[1]], function(latlngs){
+        L.polyline(latlngs,{color:color,weight:3,opacity:0.85}).addTo(m);
+      });
+      // Ferry: dashed
+      L.polyline([wpArr[1],wpArr[2]],{color:color,weight:2,opacity:0.7,dashArray:'6 4'}).addTo(m);
+      L.polyline([wpArr[2],wpArr[3]],{color:color,weight:2,opacity:0.7,dashArray:'6 4'}).addTo(m);
+    } else {
+      fetchRoute(wpArr, function(latlngs){
+        L.polyline(latlngs,{color:color,weight:3,opacity:0.85}).addTo(m);
+      });
+    }
+
+    // Markers with numbers
+    pts.forEach(function(p){
+      var order = p[3];
+      var icon = L.divIcon({
+        html: '<div style="width:20px;height:20px;border-radius:50%;background:'+color+';color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,0.3);border:2px solid white;font-family:DM Sans,sans-serif;">'+order+'</div>',
+        className: '',
+        iconSize: [20,20],
+        iconAnchor: [10,10]
+      });
+      L.marker([p[0],p[1]],{icon:icon,interactive:false}).addTo(m);
+    });
+
+    // Fit bounds
+    m.fitBounds(wpArr, {padding:[25,25]});
+  }
+
+  for(var d=1;d<=5;d++) initMinimap(d);
+})();
+</script>
 
 </body>
 </html>
