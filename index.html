@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>珀斯5天自驾行程 | 4/30 – 5/4</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sand: #F5E6D3;
+    --ocean: #1B6B93;
+    --ocean-deep: #0F4C75;
+    --sunset: #E8734A;
+    --sunset-light: #F4A261;
+    --pink-lake: #E8A0BF;
+    --sky: #87CEEB;
+    --cream: #FFF8F0;
+    --charcoal: #2C2C2C;
+    --warm-gray: #8B7E74;
+    --card-bg: rgba(255, 255, 255, 0.92);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans SC', 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--charcoal);
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* Hero */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--ocean-deep) 0%, var(--ocean) 40%, var(--sky) 70%, var(--sunset-light) 100%);
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 80%, rgba(232,115,74,0.3), transparent),
+      radial-gradient(ellipse 60% 40% at 80% 20%, rgba(135,206,235,0.4), transparent);
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-weight: 900;
+    color: white;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    text-shadow: 0 4px 30px rgba(0,0,0,0.15);
+  }
+
+  .hero h1 span {
+    display: block;
+    font-size: 0.35em;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-top: 1rem;
+    opacity: 0.9;
+  }
+
+  .hero-meta {
+    margin-top: 2rem;
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .hero-meta .tag {
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 100px;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255,255,255,0.7);
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    animation: bounce 2s infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
+  }
+
+  /* Map Section */
+  .map-section {
+    padding: 0;
+    position: relative;
+  }
+
+  .map-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    text-align: center;
+    padding: 3rem 0 1.5rem;
+    color: var(--ocean-deep);
+  }
+
+  .map-container {
+    width: 100%;
+    height: 500px;
+    border-top: 3px solid var(--ocean);
+    border-bottom: 3px solid var(--ocean);
+  }
+
+  .map-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  /* Timeline */
+  .timeline-section {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 4rem 1.5rem;
+  }
+
+  .day-block {
+    position: relative;
+    margin-bottom: 4rem;
+    padding-left: 3rem;
+  }
+
+  .day-block::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 3.5rem;
+    bottom: -2rem;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--ocean), var(--sunset-light));
+  }
+
+  .day-block:last-child::before { display: none; }
+
+  .day-number {
+    position: absolute;
+    left: -6px;
+    top: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.8rem;
+    color: white;
+    z-index: 2;
+  }
+
+  .day-block:nth-child(1) .day-number { background: var(--ocean); }
+  .day-block:nth-child(2) .day-number { background: var(--pink-lake); }
+  .day-block:nth-child(3) .day-number { background: var(--sunset); }
+  .day-block:nth-child(4) .day-number { background: #6C63FF; }
+  .day-block:nth-child(5) .day-number { background: var(--warm-gray); }
+
+  .day-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .day-header h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--charcoal);
+    margin-bottom: 0.2rem;
+  }
+
+  .day-header .date {
+    font-size: 0.85rem;
+    color: var(--warm-gray);
+    font-weight: 500;
+  }
+
+  .day-header .route {
+    font-size: 0.9rem;
+    color: var(--ocean);
+    font-weight: 500;
+    margin-top: 0.3rem;
+  }
+
+  .stop-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.04);
+    border-left: 4px solid var(--ocean);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .stop-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 30px rgba(0,0,0,0.08);
+  }
+
+  .stop-card.highlight { border-left-color: var(--sunset); }
+  .stop-card.pink { border-left-color: var(--pink-lake); }
+  .stop-card.sky { border-left-color: #6C63FF; }
+
+  .stop-time {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--warm-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .stop-name {
+    font-weight: 700;
+    font-size: 1.05rem;
+    margin: 0.3rem 0;
+    color: var(--charcoal);
+  }
+
+  .stop-desc {
+    font-size: 0.88rem;
+    color: #666;
+    line-height: 1.6;
+  }
+
+  .stop-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 0.15rem 0.6rem;
+    border-radius: 100px;
+    margin-top: 0.5rem;
+    font-weight: 600;
+  }
+
+  .tag-food { background: #FFF3E0; color: #E65100; }
+  .tag-scenic { background: #E3F2FD; color: #1565C0; }
+  .tag-adventure { background: #FCE4EC; color: #C62828; }
+  .tag-stay { background: #E8F5E9; color: #2E7D32; }
+  .tag-transport { background: #F3E5F5; color: #6A1B9A; }
+
+  /* Budget Section */
+  .budget-section {
+    max-width: 700px;
+    margin: 0 auto 4rem;
+    padding: 0 1.5rem;
+  }
+
+  .budget-card {
+    background: linear-gradient(135deg, var(--ocean-deep), var(--ocean));
+    border-radius: 20px;
+    padding: 2.5rem;
+    color: white;
+  }
+
+  .budget-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .budget-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    font-size: 0.95rem;
+  }
+
+  .budget-row:last-of-type {
+    border-bottom: none;
+    padding-top: 1rem;
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+
+  .budget-row span:last-child { font-weight: 600; }
+
+  /* Tips Section */
+  .tips-section {
+    max-width: 700px;
+    margin: 0 auto 4rem;
+    padding: 0 1.5rem;
+  }
+
+  .tips-card {
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 2.5rem;
+    box-shadow: 0 4px 30px rgba(0,0,0,0.06);
+  }
+
+  .tips-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    color: var(--ocean-deep);
+    margin-bottom: 1.5rem;
+  }
+
+  .tip-item {
+    padding: 0.6rem 0;
+    font-size: 0.92rem;
+    color: #555;
+    display: flex;
+    gap: 0.8rem;
+    align-items: flex-start;
+  }
+
+  .tip-icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    background: var(--sand);
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 3rem 1.5rem;
+    color: var(--warm-gray);
+    font-size: 0.8rem;
+    border-top: 1px solid #eee;
+  }
+
+  @media (max-width: 600px) {
+    .day-block { padding-left: 2.2rem; }
+    .stop-card { padding: 1rem 1.2rem; }
+    .budget-card, .tips-card { padding: 1.8rem; }
+    .hero-meta { gap: 0.8rem; }
+  }
+
+  @media print {
+    .hero { min-height: auto; padding: 3rem 2rem; break-after: page; }
+    .map-container { height: 400px; }
+    .stop-card:hover { transform: none; box-shadow: none; }
+    .scroll-hint { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>
+      Perth Road Trip
+      <span>珀斯5天自驾行程 · 2026</span>
+    </h1>
+    <div class="hero-meta">
+      <div class="tag">4月30日 – 5月4日</div>
+      <div class="tag">~1,300 km</div>
+      <div class="tag">珀斯机场 ⇄ 珀斯机场</div>
+    </div>
+  </div>
+  <div class="scroll-hint">↓ 向下滚动查看行程 ↓</div>
+</section>
+
+<!-- Map -->
+<section class="map-section">
+  <h2>全程路线</h2>
+  <!-- Legend -->
+  <div id="map-legend" style="display:flex;justify-content:center;gap:1.2rem;flex-wrap:wrap;padding:0 1rem 1rem;font-size:0.85rem;font-weight:600;">
+    <span style="display:flex;align-items:center;gap:0.4rem;"><span style="width:28px;height:4px;border-radius:2px;background:#1B6B93;display:inline-block;"></span> Day 1 沿海北上</span>
+    <span style="display:flex;align-items:center;gap:0.4rem;"><span style="width:28px;height:4px;border-radius:2px;background:#E8A0BF;display:inline-block;"></span> Day 2 粉红湖</span>
+    <span style="display:flex;align-items:center;gap:0.4rem;"><span style="width:28px;height:4px;border-radius:2px;background:#E8734A;display:inline-block;"></span> Day 3 卡尔巴里</span>
+    <span style="display:flex;align-items:center;gap:0.4rem;"><span style="width:28px;height:4px;border-radius:2px;background:#6C63FF;display:inline-block;"></span> Day 4 跳伞日</span>
+    <span style="display:flex;align-items:center;gap:0.4rem;"><span style="width:28px;height:4px;border-radius:2px;background:#8B7E74;display:inline-block;"></span> Day 5 珀斯</span>
+  </div>
+  <div class="map-container" id="leaflet-map"></div>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script>
+  (function(){
+    var map = L.map('leaflet-map', {scrollWheelZoom: false}).setView([-29.5, 115.3], 7);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors',
+      maxZoom: 18
+    }).addTo(map);
+
+    // Day colors
+    var colors = {
+      1: '#1B6B93',
+      2: '#E8A0BF',
+      3: '#E8734A',
+      4: '#6C63FF',
+      5: '#8B7E74'
+    };
+
+    // Stops: [lat, lng, name, day]
+    var stops = [
+      [-31.9385, 115.9672, '珀斯机场', 1],
+      [-31.0021, 115.3307, 'Lancelin 白沙丘', 1],
+      [-30.4936, 115.0689, 'Lobster Shack', 1],
+      [-30.5913, 115.1582, '尖峰石阵 Pinnacles', 1],
+      [-30.3067, 115.0374, 'Jurien Bay 住宿', 1],
+      // Day 2
+      [-28.7761, 114.6113, 'Geraldton 午餐', 2],
+      [-28.1562, 114.2389, '粉红湖 Hutt Lagoon', 2],
+      [-27.7112, 114.1661, 'Kalbarri 住宿', 2],
+      // Day 3
+      [-27.8208, 114.4614, 'Kalbarri 国家公园', 3],
+      [-27.7112, 114.1661, 'Kalbarri 午餐', 3],
+      [-28.7761, 114.6113, 'Geraldton 住宿', 3],
+      // Day 4
+      [-32.0475, 115.7477, 'Fremantle 码头', 4],
+      [-31.9965, 115.5399, 'Rottnest Island 跳伞', 4],
+      [-32.0475, 115.7477, 'Fremantle 返回', 4],
+      // Day 5
+      [-31.9610, 115.8415, 'Kings Park', 5],
+      [-31.9939, 115.7510, 'Cottesloe Beach', 5],
+      [-31.9385, 115.9672, '珀斯机场 还车', 5]
+    ];
+
+    // Routes per day (indices into stops)
+    var routes = {
+      1: [0,1,2,3,4],
+      2: [4,5,6,7],
+      3: [7,8,9,10],
+      4: [10,11,12,13],
+      5: [13,14,15,16]
+    };
+
+    // Draw arrow decorator on a polyline
+    function addArrows(latlngs, color) {
+      // Add arrow markers at midpoints of each segment
+      for (var i = 0; i < latlngs.length - 1; i++) {
+        var from = latlngs[i];
+        var to = latlngs[i+1];
+        var midLat = (from[0] + to[0]) / 2;
+        var midLng = (from[1] + to[1]) / 2;
+        var angle = Math.atan2(to[1] - from[1], to[0] - from[0]) * 180 / Math.PI;
+        // Leaflet uses CSS rotation; we need bearing-style angle
+        // atan2 gives angle from east; convert to compass-like for visual arrow
+        var bearing = 90 - angle;
+
+        var arrowIcon = L.divIcon({
+          html: '<div style="transform:rotate(' + bearing + 'deg);color:' + color + ';font-size:18px;font-weight:bold;text-shadow:0 0 3px white,0 0 6px white;">▶</div>',
+          className: '',
+          iconSize: [20, 20],
+          iconAnchor: [10, 10]
+        });
+        L.marker([midLat, midLng], {icon: arrowIcon, interactive: false}).addTo(map);
+      }
+    }
+
+    // Draw routes
+    for (var day = 1; day <= 5; day++) {
+      var indices = routes[day];
+      var latlngs = indices.map(function(i){ return [stops[i][0], stops[i][1]]; });
+      var color = colors[day];
+
+      L.polyline(latlngs, {
+        color: color,
+        weight: day === 4 ? 3 : 4,
+        opacity: 0.85,
+        dashArray: day === 4 ? '8 6' : null,
+        lineCap: 'round',
+        lineJoin: 'round'
+      }).addTo(map);
+
+      addArrows(latlngs, color);
+    }
+
+    // Place markers
+    var placed = {};
+    stops.forEach(function(s) {
+      var key = s[0].toFixed(3) + ',' + s[1].toFixed(3);
+      if (placed[key]) return; // skip duplicates
+      placed[key] = true;
+
+      var day = s[3];
+      var color = colors[day];
+      var isStart = (s[2].indexOf('机场') > -1);
+      var size = isStart ? 14 : 10;
+
+      var icon = L.divIcon({
+        html: '<div style="width:'+size+'px;height:'+size+'px;border-radius:50%;background:'+color+';border:2.5px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>',
+        className: '',
+        iconSize: [size, size],
+        iconAnchor: [size/2, size/2]
+      });
+
+      L.marker([s[0], s[1]], {icon: icon})
+        .bindTooltip(s[2], {
+          permanent: false,
+          direction: 'top',
+          offset: [0, -8],
+          className: 'map-tooltip'
+        })
+        .addTo(map);
+    });
+
+    // Fit bounds
+    var allPts = stops.map(function(s){ return [s[0], s[1]]; });
+    map.fitBounds(allPts, {padding: [40, 40]});
+  })();
+  </script>
+  <style>
+    .map-tooltip {
+      font-family: 'Noto Sans SC', 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+  </style>
+</section>
+
+<!-- Timeline -->
+<section class="timeline-section">
+
+  <!-- Day 1 -->
+  <div class="day-block">
+    <div class="day-number">1</div>
+    <div class="day-header">
+      <h3>沿海北上 · 白沙与石阵</h3>
+      <div class="date">4月30日 周四</div>
+      <div class="route">Perth Airport → Lancelin → Cervantes → Pinnacles → Jurien Bay</div>
+    </div>
+
+    <div class="stop-card">
+      <div class="stop-time">09:00</div>
+      <div class="stop-name">珀斯机场取车</div>
+      <div class="stop-desc">T1/T2 航站楼取车柜台，建议提前在 VroomVroomVroom 或 Cheapflights 比价预订。Compact 车型约 $37/天起。</div>
+      <span class="stop-tag tag-transport">🚗 取车</span>
+    </div>
+
+    <div class="stop-card highlight">
+      <div class="stop-time">10:30 – 12:00</div>
+      <div class="stop-name">Lancelin 白沙丘</div>
+      <div class="stop-desc">巨型白色沙丘，可租滑沙板（$10）或骑 ATV 四驱车，沙漠与印度洋对比出片极佳。建议带防沙面罩和水。</div>
+      <span class="stop-tag tag-scenic">🏜️ 白沙滩</span>
+      <span class="stop-tag tag-adventure">🛷 滑沙</span>
+    </div>
+
+    <div class="stop-card">
+      <div class="stop-time">12:30 – 13:30</div>
+      <div class="stop-name">Lobster Shack 龙虾午餐</div>
+      <div class="stop-desc">Cervantes 当地名店，海鲜拼盘或整只龙虾套餐。注意厨房 15:00 关闭，别太晚到。两人约 $100+。</div>
+      <span class="stop-tag tag-food">🦞 美食</span>
+    </div>
+
+    <div class="stop-card highlight">
+      <div class="stop-time">14:30 – 16:00</div>
+      <div class="stop-name">尖峰石阵 Pinnacles Desert</div>
+      <div class="stop-desc">Nambung 国家公园内，4.5km 车道穿行数千根石灰岩柱，有些高达 3.5 米。傍晚金色光影下最壮观。门票 $15/车。</div>
+      <span class="stop-tag tag-scenic">🪨 地标</span>
+    </div>
+
+    <div class="stop-card">
+      <div class="stop-time">17:00</div>
+      <div class="stop-name">住宿 Jurien Bay</div>
+      <div class="stop-desc">安静的海滨小镇，推荐 Jurien Bay Motel Apartments。有厨房可自己做饭。当天总驾驶约 2.5h。</div>
+      <span class="stop-tag tag-stay">🏨 住宿</span>
+    </div>
+  </div>
+
+  <!-- Day 2 -->
+  <div class="day-block">
+    <div class="day-number">2</div>
+    <div class="day-header">
+      <h3>印度洋公路 · 粉红湖</h3>
+      <div class="date">5月1日 周五</div>
+      <div class="route">Jurien Bay → Geraldton → Hutt Lagoon → Kalbarri</div>
+    </div>
+
+    <div class="stop-card">
+      <div class="stop-time">09:00</div>
+      <div class="stop-name">出发北上</div>
+      <div class="stop-desc">沿 Indian Ocean Drive 北行，沿途可停 Green Head、Dongara 等小镇看海岸。</div>
+      <span class="stop-tag tag-transport">🛣️ 公路</span>
+    </div>
+
+    <div class="stop-card">
+      <div class="stop-time">12:00 – 13:00</div>
+      <div class="stop-name">Geraldton 午餐补给</div>
+      <div class="stop-desc">西澳中部最大城镇，加油、午餐。可顺便看看 HMAS Sydney Memorial 和海港。</div>
+      <span class="stop-tag tag-food">🍽️ 午餐</span>
+    </div>
+
+    <div class="stop-card pink">
+      <div class="stop-time">14:30 – 15:15</div>
+      <div class="stop-name">粉红湖 Hutt Lagoon</div>
+      <div class="stop-desc">粉红色盐湖，颜色来自藻类的 β-胡萝卜素。多换几个角度拍（桥上、远端土路都有好机位），晴天颜色最鲜艳。可考虑 buggy tour 或无人机航拍。</div>
+      <span class="stop-tag tag-scenic">💗 粉红湖</span>
+    </div>
+
+    <div class="stop-card">
+      <div class="stop-time">16:00</div>
+      <div class="stop-name">住宿 Kalbarri</div>
+      <div class="stop-desc">海边小镇，推荐 Kalbarri Palm Resort。傍晚去海边看日落。当天总驾驶约 4.5h（分段开）。</div>
+      <span class="stop-tag tag-stay">🏨 住宿</span>
+    </div>
+  </div>
+
+  <!-- Day 3 -->
+  <div class="day-block">
+    <div class="day-number">3</div>
+    <div class="day-header">
+      <h3>峡谷与悬崖 · 卡尔巴里</h3>
+      <div class="date">5月2日 周六</div>
+      <div class="route">Kalbarri → Kalbarri National Park → Geraldton</div>
+    </div>
+
+    <div class="stop-card highlight">
+      <div class="stop-time">09:00 – 12:30</div>
+      <div class="stop-name">卡尔巴里国家公园</div>
+      <div class="stop-desc">
+        <strong>Nature's Window</strong> — 天然岩石拱框取景，1km 步道，约45min<br>
+        <strong>Z-Bend Lookout</strong> — 俯瞰 Murchison River 峡谷<br>
+        <strong>Skywalk</strong> — 玻璃栈道悬崖观景台，100m 高空<br>
+        门票 $15/车（含所有景点），不赶时间慢慢走
+      </div>
+      <span class="stop-tag tag-scenic">🏞️ 国家公园</span>
+      <span class="stop-tag tag-adventure">🥾 徒步</span>
+    </div>
+
+    <div class="stop-card">
+      <div class="stop-time">12:30 – 13:30</div>
+      <div class="stop-name">Kalbarri 镇午餐</div>
+      <div class="stop-desc">镇上吃午餐，可以去看鹈鹕喂食（通常在河边 ~08:45，如果早起赶得上）。</div>
+      <span class="stop-tag tag-food">🍽️ 午餐</span>
+    </div>
+
+    <div class="stop-card">
+      <div class="stop-time">14:00 → 16:00</div>
+      <div class="stop-name">回程至 Geraldton（住宿）</div>
+      <div class="stop-desc">只回开 2 小时到 Geraldton，不赶回珀斯。晚上海边散步吃晚饭，轻松收尾。</div>
+      <span class="stop-tag tag-stay">🏨 住宿</span>
+    </div>
+  </div>
+
+  <!-- Day 4 -->
+  <div class="day-block">
+    <div class="day-number">4</div>
+    <div class="day-header">
+      <h3>跳伞日 · Rottnest Island</h3>
+      <div class="date">5月3日 周日</div>
+      <div class="route">Geraldton → Fremantle → Rottnest Island → Perth</div>
+    </div>
+
+    <div class="stop-card">
+      <div class="stop-time">07:30 → 11:00</div>
+      <div class="stop-name">Geraldton 开回 Fremantle</div>
+      <div class="stop-desc">这天唯一需要早起。约 3.5 小时车程到 Fremantle，停车后步行到码头。</div>
+      <span class="stop-tag tag-transport">🚗 3.5h 车程</span>
+    </div>
+
+    <div class="stop-card">
+      <div class="stop-time">11:30 – 12:00</div>
+      <div class="stop-name">渡轮前往 Rottnest Island</div>
+      <div class="stop-desc">从 Fremantle B-Shed 码头出发，船程约 30 分钟。渡轮往返约 $80–100。建议预订 Geronimo 跳伞+渡轮套餐。</div>
+      <span class="stop-tag tag-transport">⛴️ 渡轮</span>
+    </div>
+
+    <div class="stop-card sky">
+      <div class="stop-time">12:30 – 14:30</div>
+      <div class="stop-name">Skydive Geronimo 15,000ft 跳伞</div>
+      <div class="stop-desc">
+        从 15,000 英尺跳下，66 秒自由落体 + 5 分钟伞降，降落在岛上白沙滩。<br>
+        跳伞 ~$549 + 拍照 $129 / 视频+照片 $159<br>
+        <strong>跳伞看天气，当天早上致电 1300 449 669 确认</strong>
+      </div>
+      <span class="stop-tag tag-adventure">🪂 跳伞</span>
+    </div>
+
+    <div class="stop-card">
+      <div class="stop-time">14:30 – 16:30</div>
+      <div class="stop-name">Rottnest Island 环岛</div>
+      <div class="stop-desc">租自行车环岛，拍 quokka 短尾矮袋鼠自拍，Parker Point / The Basin 看海滩，灯塔打卡。</div>
+      <span class="stop-tag tag-scenic">🚲 环岛</span>
+    </div>
+
+    <div class="stop-card">
+      <div class="stop-time">16:30 → 晚上</div>
+      <div class="stop-name">渡轮回 Fremantle → 住珀斯</div>
+      <div class="stop-desc">回到 Fremantle 后逛逛老街，吃 fish & chips。开车回珀斯市区住宿。</div>
+      <span class="stop-tag tag-food">🐟 晚餐</span>
+      <span class="stop-tag tag-stay">🏨 住宿</span>
+    </div>
+  </div>
+
+  <!-- Day 5 -->
+  <div class="day-block">
+    <div class="day-number">5</div>
+    <div class="day-header">
+      <h3>珀斯半日游 · 返程</h3>
+      <div class="date">5月4日 周一</div>
+      <div class="route">Perth → Kings Park → Cottesloe Beach → Airport</div>
+    </div>
+
+    <div class="stop-card">
+      <div class="stop-time">09:00 – 10:15</div>
+      <div class="stop-name">Kings Park</div>
+      <div class="stop-desc">俯瞰珀斯天际线和 Swan River 的最佳位置，植物园免费。步道散步 1–1.5 小时。</div>
+      <span class="stop-tag tag-scenic">🌿 公园</span>
+    </div>
+
+    <div class="stop-card">
+      <div class="stop-time">10:30 – 11:15</div>
+      <div class="stop-name">Cottesloe Beach</div>
+      <div class="stop-desc">珀斯最有名的白沙滩，清澈海水，走走拍拍。路边可免费停车 3 小时。</div>
+      <span class="stop-tag tag-scenic">🏖️ 海滩</span>
+    </div>
+
+    <div class="stop-card">
+      <div class="stop-time">11:30 – 12:30</div>
+      <div class="stop-name">Elizabeth Quay / 市区</div>
+      <div class="stop-desc">水岸区喝杯咖啡，最后逛逛。</div>
+      <span class="stop-tag tag-food">☕ 咖啡</span>
+    </div>
+
+    <div class="stop-card">
+      <div class="stop-time">14:00</div>
+      <div class="stop-name">珀斯机场还车 → 登机</div>
+      <div class="stop-desc">留足时间还车和过安检。旅程结束！</div>
+      <span class="stop-tag tag-transport">✈️ 还车</span>
+    </div>
+  </div>
+
+</section>
+
+<!-- Budget -->
+<section class="budget-section">
+  <div class="budget-card">
+    <h2>费用预估（一人）</h2>
+    <div class="budget-row"><span>租车 5 天</span><span>$200 – $270</span></div>
+    <div class="budget-row"><span>油费 ~1,300 km</span><span>$160 – $200</span></div>
+    <div class="budget-row"><span>住宿 4 晚</span><span>$400 – $600</span></div>
+    <div class="budget-row"><span>跳伞 15,000ft + 拍照</span><span>$680 – $710</span></div>
+    <div class="budget-row"><span>渡轮往返 Rottnest</span><span>$80 – $100</span></div>
+    <div class="budget-row"><span>国家公园门票</span><span>~$30</span></div>
+    <div class="budget-row"><span>餐饮 5 天</span><span>$150 – $250</span></div>
+    <div class="budget-row"><span>合计</span><span>AUD $1,700 – $2,150</span></div>
+  </div>
+</section>
+
+<!-- Tips -->
+<section class="tips-section">
+  <div class="tips-card">
+    <h2>行前提醒</h2>
+    <div class="tip-item">
+      <div class="tip-icon">📋</div>
+      <div><strong>提前预订</strong> — 租车、Skydive Geronimo 跳伞+渡轮套餐、Kalbarri 和 Geraldton 住宿</div>
+    </div>
+    <div class="tip-item">
+      <div class="tip-icon">🌤️</div>
+      <div><strong>天气</strong> — 4月底珀斯秋季，20–30°C，适合户外。跳伞看天气，如被取消当纯环岛日也很值</div>
+    </div>
+    <div class="tip-item">
+      <div class="tip-icon">⛽</div>
+      <div><strong>加油</strong> — 离开 Geraldton 北上前务必加满，Kalbarri 方向加油站少且贵</div>
+    </div>
+    <div class="tip-item">
+      <div class="tip-icon">🦘</div>
+      <div><strong>驾驶安全</strong> — 避免黄昏和夜间开车，袋鼠活跃。全程柏油路，2WD 即可</div>
+    </div>
+    <div class="tip-item">
+      <div class="tip-icon">🎫</div>
+      <div><strong>国家公园</strong> — 如果还计划去其他公园，5-Day Holiday Pass 比单买划算</div>
+    </div>
+    <div class="tip-item">
+      <div class="tip-icon">📱</div>
+      <div><strong>信号</strong> — Kalbarri 和粉红湖附近手机信号较弱，提前下载离线地图</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  珀斯 5 天自驾行程 · 2026.04.30 – 05.04 · Generated by Claude
+</footer>
+
+
+
+</body>
+</html>
