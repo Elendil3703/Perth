@@ -929,21 +929,22 @@
       [-27.7112,114.1661,'Kalbarri',4]
     ],
     3: [
-      [-27.7112,114.1661,'Kalbarri 出发',1],
-      [-27.8208,114.4614,'国家公园',2],
-      [-27.7112,114.1661,'Kalbarri 午餐',3],
-      [-28.7761,114.6113,'Geraldton',4]
+      [-27.7112,114.1661,'Kalbarri 出发',0],
+      [-27.8208,114.4614,'国家公园',1],
+      [-27.7112,114.1661,'Kalbarri 午餐',2],
+      [-28.7761,114.6113,'Geraldton',3]
     ],
     4: [
-      [-28.7761,114.6113,'Geraldton 出发',1],
+      [-28.7761,114.6113,'Geraldton',1],
       [-32.0475,115.7477,'Fremantle',2],
       [-31.9965,115.5399,'Rottnest Island',3],
-      [-32.0475,115.7477,'Fremantle 返回',4]
+      [-32.0475,115.7477,'Fremantle 返回',5]
     ],
     5: [
       [-31.9610,115.8415,'Kings Park',1],
       [-31.9939,115.7510,'Cottesloe Beach',2],
-      [-31.9385,115.9672,'珀斯机场',3]
+      [-31.9580,115.8585,'Elizabeth Quay',3],
+      [-31.9385,115.9672,'珀斯机场',4]
     ]
   };
 
@@ -989,6 +990,7 @@
     // Markers with numbers
     pts.forEach(function(p){
       var order = p[3];
+      if(order === 0) return; // skip start-only waypoints (used for routing only)
       var icon = L.divIcon({
         html: '<div style="width:20px;height:20px;border-radius:50%;background:'+color+';color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,0.3);border:2px solid white;font-family:DM Sans,sans-serif;">'+order+'</div>',
         className: '',
