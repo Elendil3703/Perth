@@ -462,125 +462,82 @@
       5: ['kingspark','cottesloe','perth']
     };
 
-    // Offset a latlng array slightly perpendicular to the line direction
-    // so overlapping north/south routes don't sit on top of each other
-    function offsetLine(latlngs, px) {
-      if (latlngs.length < 2) return latlngs;
+    // Offset points perpendicular to segment direction
+    function offsetPt(from, to, px) {
+      var dlat = to[0]-from[0], dlng = to[1]-from[1];
+      var len = Math.sqrt(dlat*dlat+dlng*dlng);
+      if(len===0) return [from[0],from[1]];
+      return [from[0] + (-dlng/len)*px, from[1] + (dlat/len)*px];
+    }
+    function offsetLine(pts, px) {
+      if(pts.length<2) return pts;
       var out = [];
-      for (var i = 0; i < latlngs.length; i++) {
-        var prev = latlngs[Math.max(0, i-1)];
-        var next = latlngs[Math.min(latlngs.length-1, i+1)];
-        var dlat = next[0] - prev[0];
-        var dlng = next[1] - prev[1];
-        var len = Math.sqrt(dlat*dlat + dlng*dlng);
-        if (len === 0) { out.push(latlngs[i]); continue; }
-        // perpendicular offset (rotate 90 degrees)
-        var oLat = -dlng / len * px;
-        var oLng = dlat / len * px;
-        out.push([latlngs[i][0] + oLat, latlngs[i][1] + oLng]);
+      for(var i=0;i<pts.length;i++){
+        var prev=pts[Math.max(0,i-1)], next=pts[Math.min(pts.length-1,i+1)];
+        out.push(offsetPt(prev,next,px));
       }
       return out;
     }
 
-    // Fetch real road route from OSRM
-    function fetchRoute(waypoints, callback) {
-      var coords = waypoints.map(function(wp){ return wp[1]+','+wp[0]; }).join(';');
-      fetch('https://router.project-osrm.org/route/v1/driving/'+coords+'?overview=full&geometries=geojson')
-        .then(function(r){return r.json();}).then(function(data){
-          if(data.code==='Ok' && data.routes && data.routes.length>0){
-            callback(data.routes[0].geometry.coordinates.map(function(c){return [c[1],c[0]];}));
-          } else { callback(waypoints); }
-        }).catch(function(){ callback(waypoints); });
+    // Arrow at segment midpoint
+    function addArrow(from, to, color) {
+      var midLat=(from[0]+to[0])/2, midLng=(from[1]+to[1])/2;
+      var angle = Math.atan2(to[1]-from[1], to[0]-from[0]) * 180 / Math.PI;
+      var bearing = 90 - angle;
+      var icon = L.divIcon({
+        html: '<div style="transform:rotate('+bearing+'deg);color:'+color+';font-size:16px;font-weight:bold;text-shadow:0 0 3px white,0 0 6px white;">▶</div>',
+        className: '', iconSize:[16,16], iconAnchor:[8,8]
+      });
+      L.marker([midLat,midLng],{icon:icon,interactive:false,zIndexOffset:400}).addTo(map);
     }
 
-    // Place a "Day N" label at the midpoint of a polyline
-    function addDayLabel(latlngs, day) {
-      var mid = latlngs[Math.floor(latlngs.length / 2)];
+    // Day label at midpoint of a polyline
+    function addDayLabel(pts, day) {
+      // pick the middle segment's midpoint
+      var idx = Math.floor(pts.length/2);
+      var prev = pts[Math.max(0,idx-1)], cur = pts[idx];
+      var mid = [(prev[0]+cur[0])/2, (prev[1]+cur[1])/2];
       var color = colors[day];
       var icon = L.divIcon({
         html: '<div style="background:'+color+';color:white;font-size:11px;font-weight:700;'+
               'padding:2px 8px;border-radius:10px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,0.25);'+
               'border:2px solid white;font-family:DM Sans,sans-serif;line-height:1.3;">'+dayNames[day]+'</div>',
-        className: '',
-        iconSize: [0,0],
-        iconAnchor: [0, 10]
+        className: '', iconSize:[0,0], iconAnchor:[0,10]
       });
-      L.marker(mid, {icon: icon, interactive: false, zIndexOffset: 500}).addTo(map);
+      L.marker(mid,{icon:icon,interactive:false,zIndexOffset:500}).addTo(map);
     }
 
-    // Place an arrow marker to show direction
-    function addArrow(from, to, color) {
-      var midLat = (from[0]+to[0])/2;
-      var midLng = (from[1]+to[1])/2;
-      var angle = Math.atan2(to[1]-from[1], to[0]-from[0]) * 180 / Math.PI;
-      var bearing = 90 - angle;
-      var icon = L.divIcon({
-        html: '<div style="transform:rotate('+bearing+'deg);color:'+color+';font-size:16px;font-weight:bold;text-shadow:0 0 3px white,0 0 6px white;">▶</div>',
-        className: '',
-        iconSize: [16,16],
-        iconAnchor: [8,8]
-      });
-      L.marker([midLat, midLng], {icon: icon, interactive: false, zIndexOffset: 400}).addTo(map);
-    }
-
-    // Draw each day
-    // Day 2 goes north (Jurien→Kalbarri), Day 3 goes south (Kalbarri→Geraldton)
-    // Day 4 goes south (Geraldton→Fremantle) — these overlap, so offset 2 north & 3/4 south
-    var offsetDeg = 0.06; // offset for overlapping segments
+    // Draw each day with straight lines + arrows
+    var offsetDeg = 0.08;
 
     [1,2,3,4,5].forEach(function(day){
       var keys = dayRoutes[day];
-      var waypoints = keys.map(function(k){ return [places[k][0], places[k][1]]; });
+      var pts = keys.map(function(k){ return [places[k][0], places[k][1]]; });
       var color = colors[day];
 
-      if (day === 4) {
-        // Geraldton → Fremantle (driving, offset east to separate from Day 2/3)
-        fetchRoute([waypoints[0], waypoints[1]], function(latlngs){
-          var shifted = offsetLine(latlngs, offsetDeg);
-          L.polyline(shifted, {color:color, weight:4, opacity:0.85}).addTo(map);
-          addDayLabel(shifted, day);
-          // arrow at 1/3 and 2/3
-          var a = Math.floor(shifted.length*0.4);
-          var b = Math.floor(shifted.length*0.6);
-          if(a>0) addArrow(shifted[a-1],shifted[a],color);
-          if(b>0) addArrow(shifted[b-1],shifted[b],color);
-        });
-        // Fremantle → Rottnest (ferry, dashed)
-        L.polyline([waypoints[1], waypoints[2]], {color:color, weight:3, opacity:0.7, dashArray:'8 6'}).addTo(map);
-        addArrow(waypoints[1], waypoints[2], color);
-      } else if (day === 3) {
-        // Kalbarri→NP→Geraldton, offset west to separate from Day 2
-        fetchRoute(waypoints, function(latlngs){
-          var shifted = offsetLine(latlngs, -offsetDeg);
-          L.polyline(shifted, {color:color, weight:4, opacity:0.85}).addTo(map);
-          addDayLabel(shifted, day);
-          var a = Math.floor(shifted.length*0.35);
-          var b = Math.floor(shifted.length*0.7);
-          if(a>0) addArrow(shifted[a-1],shifted[a],color);
-          if(b>0) addArrow(shifted[b-1],shifted[b],color);
-        });
-      } else if (day === 2) {
-        // Jurien→Geraldton→Hutt→Kalbarri, offset east
-        fetchRoute(waypoints, function(latlngs){
-          var shifted = offsetLine(latlngs, offsetDeg);
-          L.polyline(shifted, {color:color, weight:4, opacity:0.85}).addTo(map);
-          addDayLabel(shifted, day);
-          var a = Math.floor(shifted.length*0.35);
-          var b = Math.floor(shifted.length*0.7);
-          if(a>0) addArrow(shifted[a-1],shifted[a],color);
-          if(b>0) addArrow(shifted[b-1],shifted[b],color);
-        });
-      } else {
-        // Day 1 and Day 5 — no overlap issues
-        fetchRoute(waypoints, function(latlngs){
-          L.polyline(latlngs, {color:color, weight:4, opacity:0.85}).addTo(map);
-          addDayLabel(latlngs, day);
-          var a = Math.floor(latlngs.length*0.35);
-          var b = Math.floor(latlngs.length*0.7);
-          if(a>0) addArrow(latlngs[a-1],latlngs[a],color);
-          if(b>0) addArrow(latlngs[b-1],latlngs[b],color);
-        });
+      // Offset overlapping segments
+      var drawPts = pts;
+      if(day===2) drawPts = offsetLine(pts, offsetDeg);
+      if(day===3) drawPts = offsetLine(pts, -offsetDeg);
+      if(day===4) {
+        // Geraldton→Fremantle offset, Fremantle→Rottnest dashed (no offset)
+        var drivePts = offsetLine([pts[0],pts[1]], offsetDeg);
+        L.polyline(drivePts, {color:color, weight:4, opacity:0.85}).addTo(map);
+        addArrow(drivePts[0], drivePts[1], color);
+        // Ferry dashed
+        L.polyline([pts[1],pts[2]], {color:color, weight:3, opacity:0.7, dashArray:'8 6'}).addTo(map);
+        addArrow(pts[1], pts[2], color);
+        addDayLabel(drivePts, day);
+        return;
       }
+
+      L.polyline(drawPts, {color:color, weight:4, opacity:0.85}).addTo(map);
+
+      // Arrows on each segment
+      for(var i=0;i<drawPts.length-1;i++){
+        addArrow(drawPts[i], drawPts[i+1], color);
+      }
+      addDayLabel(drawPts, day);
     });
 
     // Place location markers — one per unique place, always show name
